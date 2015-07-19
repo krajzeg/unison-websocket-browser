@@ -1,0 +1,28 @@
+{
+  "name": "unison-websocket-browser",
+  "version": "1.0.0",
+  "authors": [
+    "Jakub Wasilewski <wasyl@wasyl.eu>"
+  ],
+  "description": "Browser websocket communications for the client-server component of Unison",
+  "main": "dist/browser.js",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "unison",
+    "communication",
+    "websocket",
+    "client",
+    "browser"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
