@@ -53,7 +53,7 @@ var UnisonWebsocketClient = (function () {
     key: "send",
     value: function send(msgString) {
       if (this.options.debug) console.log("[UNISON] Sending: " + msgString + ".");
-      ws.send(msgString);
+      this.ws.send(msgString);
     }
   }, {
     key: "receive",
