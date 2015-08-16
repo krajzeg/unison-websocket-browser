@@ -1,1 +1,1 @@
-{"version":3,"sources":["browser.js"],"names":[],"mappings":"aAAA,qBAAqB,GAAG,OAAO,CAAC,YAAY,CAAC,CAAC","file":"browser.js","sourcesContent":["UnisonWebSocketClient = require('./index.js');\r\n"],"sourceRoot":"..\\..\\lib"}
+{"version":3,"sources":["browser.js"],"names":[],"mappings":"aAAA,qBAAqB,GAAG,OAAO,CAAC,YAAY,CAAC,CAAC","file":"browser.js","sourcesContent":["UnisonWebSocketClient = require('./index.js');\n"],"sourceRoot":"../../lib"}

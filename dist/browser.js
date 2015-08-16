@@ -14,7 +14,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _ = require("lodash");
+var _ = require('lodash');
 
 var DEFAULT_OPTIONS = {
   debug: false
@@ -31,7 +31,8 @@ var UnisonWebsocketClient = (function () {
     this.options = _.defaults(options, DEFAULT_OPTIONS);
     this.url = websocketUrl;
 
-    this._bufferedMessages = [];
+    this._bufferedReceives = [];
+    this._bufferedSends = [];
 
     this.connect();
   }
@@ -42,6 +43,9 @@ var UnisonWebsocketClient = (function () {
       var _this = this;
 
       var ws = this.ws = new WebSocket(this.url);
+      ws.onopen = function () {
+        return _this.sendBufferedMessages();
+      };
       ws.onclose = function () {
         console.log("Websocket connection to " + _this.url + " closed.");
       };
@@ -52,8 +56,23 @@ var UnisonWebsocketClient = (function () {
   }, {
     key: "send",
     value: function send(msgString) {
-      if (this.options.debug) console.log("[UNISON] Sending: " + msgString + ".");
-      this.ws.send(msgString);
+      if (this.ws.readyState < WebSocket.OPEN) {
+        if (this.options.debug) console.log("[UNISON] Buffering a send: " + msgString + ".");
+        this._bufferedSends.push(msgString);
+      } else {
+        if (this.options.debug) console.log("[UNISON] Sending: " + msgString + ".");
+        this.ws.send(msgString);
+      }
+    }
+  }, {
+    key: "sendBufferedMessages",
+    value: function sendBufferedMessages() {
+      var _this2 = this;
+
+      this._bufferedSends.forEach(function (msg) {
+        return _this2.send(msg);
+      });
+      this._bufferedSends = [];
     }
   }, {
     key: "receive",
@@ -65,19 +84,19 @@ var UnisonWebsocketClient = (function () {
       } else {
         // if the callback is not registered yet, we buffer messages for later
         if (this.options.debug) console.log("[UNISON] Stashing received message, no callback registered.");
-        this._bufferedMessages.push(msgString);
+        this._bufferedReceives.push(msgString);
       }
     }
   }, {
     key: "onReceive",
     value: function onReceive(callback) {
-      var _this2 = this;
+      var _this3 = this;
 
       this._receiveCallback = callback;
 
       // deliver all buffered messages now that there is somebody listening
-      this._bufferedMessages.forEach(function (msg) {
-        _this2.receive(msg);
+      this._bufferedReceives.forEach(function (msg) {
+        _this3.receive(msg);
       });
     }
   }]);
@@ -92,7 +111,7 @@ module.exports = exports["default"];
 (function (global){
 /**
  * @license
- * lodash 3.10.0 (Custom Build) <https://lodash.com/>
+ * lodash 3.10.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern -d -o ./index.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -105,7 +124,7 @@ module.exports = exports["default"];
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '3.10.0';
+  var VERSION = '3.10.1';
 
   /** Used to compose bitmasks for wrapper metadata. */
   var BIND_FLAG = 1,
